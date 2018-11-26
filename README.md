@@ -128,16 +128,30 @@ if (!function_exists('labelManipulate')) {
     }
 }
 ```
+## ScreenShots
+
+## English Language
+![Screenshot](screenshots/en-demo.png)
+
+## Italy Language
+![Screenshot](screenshots/it-demo.png)
+
+## Germany Language
+![Screenshot](screenshots/gr-demo.png)
 
 ## Contributing
 Feel free to create any pull requests for the project. For proposing any new changes or features you want to add to the project, you can send us an email at vishal@viitorcloud.com or ruchit.patel@viitorcloud.com
+
+## Issues
+
+If you come across any issues please report them [here](https://github.com/viitorcloudtechnologies/multiple-language-manipulate/issues).
 
 ## Authors
 * [**Ruchit Patel**](https://github.com/ruchit-viitorcloud)
 
 ## Special Thanks to
-* [**Ruchit Patel**](https://github.com/ruchit-viitorcloud)
 * [**Sahil Darji**](https://github.com/vc-sahil)
+* [**Dhara_Tank**](https://github.com/dhara-viitorcloud)
 * [Laravel](https://laravel.com) Community
 
 ## License
