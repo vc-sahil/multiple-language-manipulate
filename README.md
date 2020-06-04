@@ -140,19 +140,21 @@ if (!function_exists('labelManipulate')) {
 ![Screenshot](screenshots/gr-demo.png)
 
 ## Contributing
-Feel free to create any pull requests for the project. For proposing any new changes or features you want to add to the project, you can send us an email at vishal@viitorcloud.com or ruchit.patel@viitorcloud.com
 
-## Issues
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-If you come across any issues please report them [here](https://github.com/viitorcloudtechnologies/multiple-language-manipulate/issues).
+## Security
 
-## Authors
-* [**Ruchit Patel**](https://github.com/ruchit-viitorcloud)
+If you discover any security-related issues, please email vishal@viitorcloud.com or ruchit.patel@viitor.cloud instead of using the issue tracker.
 
-## Special Thanks to
-* [**Sahil Darji**](https://github.com/vc-sahil)
-* [**Dhara_Tank**](https://github.com/dhara-viitorcloud)
-* [Laravel](https://laravel.com) Community
+## Credits
+
+- [Ruchit Patel](https://github.com/ruchit-viitorcloud)
 
 ## License
-[MIT LICENSE](https://github.com/viitorcloudtechnologies/multiple-language-manipulate/blob/master/LICENSE)
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+## Notes
+
+**You can create as many whitelists or blacklist groups as you wish to protect access**
