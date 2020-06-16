@@ -10,4 +10,5 @@ return [
         'it' => 'Italien',
         'gr' => 'Deutschland',
     ],
+    'title'                    => 'Mehrere Sprachen manipulieren Demo',
 ];

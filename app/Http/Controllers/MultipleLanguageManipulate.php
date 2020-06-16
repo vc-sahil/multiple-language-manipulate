@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\IndustrySector;
+use Illuminate\Support\Facades\Log;
 
 class MultipleLanguageManipulate extends Controller
 {
@@ -17,14 +18,15 @@ class MultipleLanguageManipulate extends Controller
 
         try {
             $industrySectors = IndustrySector::getAllByPluck($lang);
-            $keySpecificValue = labelManipulate('magic-label', 'current_language_options')[$lang];
+            $keySpecificValue = labelManipulate('magic-label', 'current_language_options')[$lang]; // fetch key specific value from language file.
 
             return view('demo')->with([
                 'industrySectors'  => $industrySectors,
                 'keySpecificValue' => $keySpecificValue,
             ]);
         } catch (\Exception $ex) {
-            return $ex;
+            Log::error($ex);
+            abort(404);
         }
     }
 }
