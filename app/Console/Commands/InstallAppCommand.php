@@ -7,9 +7,15 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use PDOException;
 use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
 use Symfony\Component\Console\Question\Question;
 
+/**
+ * Class InstallAppCommand.
+ *
+ * @author Ruchit Patel
+ */
 class InstallAppCommand extends Command
 {
     /**
@@ -54,6 +60,7 @@ class InstallAppCommand extends Command
         $this->line('------------------');
         $this->line('Welcome to Multiple language manipulate demo .');
         $this->line('------------------');
+        exec('composer install'); // composer install
 
         $extensions = get_loaded_extensions();
         $require_extensions = ['mbstring', 'openssl', 'curl', 'exif', 'fileinfo', 'tokenizer'];
@@ -72,6 +79,31 @@ class InstallAppCommand extends Command
         //Key Generate
         Artisan::call('key:generate');
         $this->line('Key generated in .env file!');
+        $this->line('------------------');
+
+        //Cache Clear
+        Artisan::call('cache:clear');
+        $this->info('Application cache cleared!');
+        $this->line('------------------');
+
+        //Route Clear
+        Artisan::call('route:clear');
+        $this->info('Route cache cleared!');
+        $this->line('------------------');
+
+        //Config Clear
+        Artisan::call('config:clear');
+        $this->info('Configuration cache cleared!');
+        $this->line('------------------');
+
+        //View Clear
+        Artisan::call('view:clear');
+        $this->info('Compiled view cleared!');
+        $this->line('------------------');
+
+        $this->info('Now you can access the application on below url!');
+        $this->line('Laravel development server started: <http://127.0.0.1:8000>');
+        Artisan::call('serve');
     }
 
     /**
@@ -80,8 +112,6 @@ class InstallAppCommand extends Command
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      *
      * @return void
-     *
-     * @author Ruchit Patel
      */
     protected function setDatabaseInfo()
     {
@@ -99,11 +129,12 @@ class InstallAppCommand extends Command
             $this->port = $this->ask('Enter a database port?', config('config-variables.default_db_port'));
             $this->database = $this->ask('Enter a database name', $this->guessDatabaseName());
 
-            $this->username = $this->ask('What is your MySQL username?', config('conf-variables.default_db_username'));
+            $this->username = $this->ask('What is your MySQL username?', config('config-variables.default_db_username'));
 
             $question = new Question('What is your MySQL password?', '<none>');
             $question->setHidden(true)->setHiddenFallback(true);
             $this->password = (new SymfonyQuestionHelper())->ask($this->input, $this->output, $question);
+
             if ($this->password === '<none>') {
                 $this->password = '';
             }
@@ -131,40 +162,18 @@ class InstallAppCommand extends Command
             unset($this->laravel['config']['database.connections.mysql.database']);
 
             if (!checkDatabaseConnection()) {
-                $this->error('Can not connect to database, please try again!');
+                $this->error('Can not connect to database!');
             } else {
-                $this->info('Connect to database successfully!');
+                $this->info('Connected successfully!');
             }
         }
 
+        $this->createDatabase($this->database); // create database if not exists.
+
         if ($this->confirm('You want to dump database sql ?')) {
-            if (!empty($this->database)) {
-                // Force the new login to be used
-                DB::purge();
-
-                // Switch to use {$this->database}
-                DB::unprepared('USE `'.$this->database.'`');
-                DB::connection()->setDatabaseName($this->database);
-
-                $dumpDB = DB::unprepared(file_get_contents(base_path().'/database/dump/laravel_vue_spa_boilerplate.sql'));
-
-                if ($dumpDB) {
-                    $this->info('Import default database successfully!');
-                }
-            }
+            $this->dumpDB($this->database);
         } else {
-            if ($this->confirm('You want to migrate tables?')) {
-                // Switch to use {$this->database}
-                DB::unprepared('USE `'.$this->database.'`');
-                //DB::connection()->setDatabaseName($this->database);
-                Artisan::call('migrate');
-                $this->info('Migration successfully done!');
-
-                if ($this->confirm('You want to seeding your database?')) {
-                    Artisan::call('db:seed');
-                    $this->info('Seeding successfully done!');
-                }
-            }
+            $this->migrateTables($this->database);
         }
     }
 
@@ -181,7 +190,7 @@ class InstallAppCommand extends Command
             $segments = array_reverse(explode(DIRECTORY_SEPARATOR, app_path()));
             $name = explode('.', $segments[1])[0];
 
-            return str_slug($name);
+            return str_replace('-', '_', str_slug($name));
         } catch (Exception $e) {
             return '';
         }
@@ -197,5 +206,72 @@ class InstallAppCommand extends Command
     protected function getKeyFile()
     {
         return $this->files->exists('.env') ? $this->files->get('.env') : $this->files->get('.env.example');
+    }
+
+    /**
+     * @param $database
+     */
+    protected function createDatabase($database)
+    {
+        if (!$database) {
+            $this->info('Skipping creation of database as env(DB_DATABASE) is empty');
+
+            return;
+        }
+
+        try {
+            $query = "CREATE DATABASE IF NOT EXISTS $database CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
+            if (DB::statement($query)) {
+                $this->info("Successfully created $database database");
+            } else {
+                $this->info('Oops, Something went wrong, please try again or create database manually !!!');
+            }
+
+            return;
+        } catch (PDOException $exception) {
+            $this->error(sprintf('Failed to create %s database, %s', $database, $exception->getMessage()));
+
+            return;
+        }
+    }
+
+    /**
+     * @param $database
+     */
+    protected function dumpDB($database)
+    {
+        if (!empty($database)) {
+            // Force the new login to be used
+            DB::purge();
+
+            // Switch to use {$this->database}
+            DB::unprepared('USE `'.$database.'`');
+            DB::connection()->setDatabaseName($database);
+
+            $dumpDB = DB::unprepared(file_get_contents(base_path().'/database/dump/multiple_language_manipulate.sql'));
+
+            if ($dumpDB) {
+                $this->info('Import default database successfully!');
+            }
+        }
+    }
+
+    /**
+     * @param $database
+     */
+    protected function migrateTables($database)
+    {
+        if ($this->confirm('You want to migrate tables?')) {
+            // Switch to use {$this->database}
+            DB::unprepared('USE `'.$database.'`');
+            //DB::connection()->setDatabaseName($this->database);
+            Artisan::call('migrate');
+            $this->info('Migration successfully done!');
+
+            if ($this->confirm('You want to seeding your database?')) {
+                Artisan::call('db:seed');
+                $this->info('Seeding successfully done!');
+            }
+        }
     }
 }

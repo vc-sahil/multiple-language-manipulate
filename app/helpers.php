@@ -27,7 +27,7 @@ if (!function_exists('dbTrans')) {
      */
     function dbTrans(string $lang, string $tableName)
     {
-        return $lang.'_'.config('config-variables.field_post_fix.'.$tableName);
+        return $lang.'_'.config('table-variables.field_post_fix.'.$tableName);
     }
 }
 

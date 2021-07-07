@@ -2,11 +2,6 @@
 
 ## Multi Language Manipulate Demo
 
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
 ## Introduction
 This application helps to manipulate labels, dropdown values, string, content on the basis of language change.Values will be display automatically from the database or language files using helpers. 
 
@@ -27,7 +22,7 @@ If you have linux system, you can execute below command only in your project roo
     1) sudo chmod -R 777 install.sh
     2) ./install.sh
     
-Run Artisan Command for database setup, connection and configuration.
+If you have windows system, you can run Artisan Command for database setup, connection and configuration.
     
     php artisan install:app
     
@@ -59,6 +54,7 @@ Start the local development server
     
    
 ## Kye points before using this feature
+    
     Please check composer.json file in which you have to define 'helpers.php' file and 'database' folder path.
     
     Review config/config-variables.php file.
@@ -88,7 +84,7 @@ if (!function_exists('dbTrans')) {
      */
     function dbTrans(string $lang, string $tableName)
     {
-        return $lang.'_'.config('config-variables.field_post_fix.'.$tableName);
+        return $lang.'_'.config('table-variables.field_post_fix.'.$tableName);
     }
 }
 ```
@@ -132,17 +128,33 @@ if (!function_exists('labelManipulate')) {
     }
 }
 ```
+## ScreenShots
+
+## English Language
+![Screenshot](screenshots/en-demo.png)
+
+## Italy Language
+![Screenshot](screenshots/it-demo.png)
+
+## Germany Language
+![Screenshot](screenshots/gr-demo.png)
 
 ## Contributing
-Feel free to create any pull requests for the project. For proposing any new changes or features you want to add to the project, you can send us an email at vishal@viitorcloud.com or ruchit.patel@viitorcloud.com
 
-## Authors
-* [**Ruchit Patel**](https://github.com/ruchit-viitorcloud)
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-## Special Thanks to
-* [**Ruchit Patel**](https://github.com/ruchit-viitorcloud)
-* [**Sahil Darji**](https://github.com/vc-sahil)
-* [Laravel](https://laravel.com) Community
+## Security
+
+If you discover any security-related issues, please email vishal@viitorcloud.com or ruchit.patel@viitor.cloud instead of using the issue tracker.
+
+## Credits
+
+- [Ruchit Patel](https://github.com/ruchit-viitorcloud)
 
 ## License
-[MIT LICENSE](https://github.com/viitorcloudtechnologies/multiple-language-manipulate/blob/master/LICENSE)
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+## Notes
+
+**You can create as many whitelists or blacklist groups as you wish to protect access**
